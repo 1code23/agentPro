@@ -45,16 +45,21 @@ const menus = [
   { index: 'table', label: '表格 Table', icon: 'Grid' },
   { index: 'form', label: '表单 Form', icon: 'Document' },
   { index: 'feedback', label: '反馈与展示', icon: 'Bell' },
-  { index: 'agent', label: 'Agent Demo', icon: 'ChatDotRound', path: '/agent' }
+  { index: 'agent', label: 'Agent Demo', icon: 'ChatDotRound', path: '/agent' },
+  { index: 'deepseek', label: 'DeepSeek Demo', icon: 'MagicStick', path: '/deepseek' }
 ]
 
-const currentTitle = computed(() =>
-  route.path === '/agent' ? 'Vue3 + 前端 Agent 最小 Demo' : 'Vue3 + Element Plus 组件展示 Demo'
-)
+const currentTitle = computed(() => {
+  if (route.path === '/agent') return 'Vue3 + 前端 Agent 最小 Demo'
+  if (route.path === '/deepseek') return 'Vue3 + DeepSeek 真实模型 Demo'
+  return 'Vue3 + Element Plus 组件展示 Demo'
+})
 
-const currentTag = computed(() =>
-  route.path === '/agent' ? 'Mock 模型 · 无 Key' : '纯前端 · Vite 构建'
-)
+const currentTag = computed(() => {
+  if (route.path === '/agent') return 'Mock 模型 · 无 Key'
+  if (route.path === '/deepseek') return 'DeepSeek · function calling'
+  return '纯前端 · Vite 构建'
+})
 
 // 菜单点击：组件区滚动定位，Agent Demo 走路由跳转
 const onSelect = async (index) => {
@@ -73,11 +78,12 @@ const onSelect = async (index) => {
   document.getElementById(index)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
-// 直接访问 /agent 时同步菜单高亮
+// 直接访问子页面时同步菜单高亮
 watch(
   () => route.path,
   (path) => {
     if (path === '/agent') active.value = 'agent'
+    if (path === '/deepseek') active.value = 'deepseek'
   },
   { immediate: true }
 )

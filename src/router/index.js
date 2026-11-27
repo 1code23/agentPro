@@ -8,6 +8,11 @@ const routes = [
     name: 'agent',
     // 懒加载：进入 Agent Demo 页时才加载
     component: () => import('../views/AgentDemoView.vue')
+  },
+  {
+    path: '/deepseek',
+    name: 'deepseek',
+    component: () => import('../views/DeepSeekDemoView.vue')
   }
 ]
 

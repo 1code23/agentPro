@@ -11,61 +11,11 @@
  * POST /api/llm/chat/completions 的 fetch，循环和回填逻辑不用动。
  */
 
+import { toolImpls } from './tools'
+
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-// 工具定义：告诉模型「有哪些工具、参数长什么样」
-export const toolSchemas = [
-  {
-    type: 'function',
-    function: {
-      name: 'get_weather',
-      description: '查询指定城市的实时天气',
-      parameters: {
-        type: 'object',
-        properties: {
-          city: { type: 'string', description: '城市名称，如 北京' }
-        },
-        required: ['city']
-      }
-    }
-  },
-  {
-    type: 'function',
-    function: {
-      name: 'get_time',
-      description: '获取当前时间',
-      parameters: {
-        type: 'object',
-        properties: {}
-      }
-    }
-  }
-]
-
 const CITIES = ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '重庆']
-
-const WEATHER = {
-  北京: { temp: 22, desc: '晴' },
-  上海: { temp: 25, desc: '多云' },
-  广州: { temp: 29, desc: '小雨' },
-  深圳: { temp: 28, desc: '阴' },
-  杭州: { temp: 24, desc: '多云' },
-  成都: { temp: 21, desc: '阴' }
-}
-
-// 工具的真实实现：模型只会生成参数，真正执行在这里
-export const toolImpls = {
-  async get_weather({ city }) {
-    const weather = WEATHER[city] || { temp: 20, desc: '晴' }
-    return { city, ...weather, unit: '℃' }
-  },
-  async get_time() {
-    return {
-      now: new Date().toLocaleString('zh-CN', { hour12: false }),
-      timezone: 'Asia/Shanghai'
-    }
-  }
-}
 
 function safeParse(raw) {
   try {
